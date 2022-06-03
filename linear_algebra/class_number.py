@@ -13,8 +13,8 @@ class Data_digits:
 
     def data(self):
         [self.d.append(self.digits.images[self.samples[i]]) for i in range(8)]
-        for i in range(8):
-            self.d.append(self.digits.images[self.samples[i]])
+        # for i in range(8):
+        # self.d.append(self.digits.images[self.samples[i]])
 
         plt.figure(figsize=(8, 2))
         for i in range(8):
@@ -29,9 +29,9 @@ class Data_digits:
         plt.show()
 
     def vector_image(self):
-        v = []
-        for i in range(8):
-            v.append(self.d[i].reshape(64, 1)) #벡터화
+        v = [self.d[i].reshape(64, 1) for i in range(8)]
+        # for i in range(8):
+        # v.append(self.d[i].reshape(64, 1)) #벡터화
 
         plt.figure(figsize=(8, 3))
         for i in range(8):
