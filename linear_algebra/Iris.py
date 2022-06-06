@@ -9,7 +9,7 @@ class Iris:
         print(self.iris.data[0, :])
 
 if __name__== '__main__' :
-    Iris().main()  
+    Iris().main()    
 
 
 
