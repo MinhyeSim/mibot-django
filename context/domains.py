@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 
 import pandas
+from abc import *
 
 
 @dataclass()
@@ -55,3 +56,46 @@ class Dataset:
 
     @label.setter
     def label(self, value): self._label = value
+
+class PrinterBase(metaclass=ABCMeta):
+    @abstractmethod
+    def dframe(self):
+        pass
+    #new_file, csv, xls, json
+class ReaderBase(metaclass=ABCMeta):
+
+    @abstractmethod
+    def new_file(self):
+        pass
+
+    @abstractmethod
+    def csv(self):
+        pass
+
+    @abstractmethod
+    def xls(self):
+        pass
+
+    @abstractmethod
+    def json(self):
+        pass
+
+#Reader 클래스 생성
+#Printer 클래스 생성 후 각 base를 상속 받는 구조
+
+class Printer(PrinterBase):
+    pass
+
+class Reader(ReaderBase):
+    def new_file(self):
+        pass
+
+
+    def csv(self):
+        pass
+
+    def xls(self):
+        pass
+
+    def json(self):
+        pass
