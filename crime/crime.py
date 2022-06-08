@@ -13,10 +13,13 @@ class Solution(Reader):
         self.file.context = './data/'
 
     def save_police_pos(self):
-        pass
+        self.file.fname = 'crime_in_seoul' #파일을 읽고
+        this = self.csv(self.file)
+        self.print(this) #출력..?
 
     def save_cctv_pos(self):
-        pass
+        self.file.fname = 'cctv_in_seoul'
+        self.print(self.csv(self.file))
 
     def save_police_norm(self):
         pass
@@ -25,8 +28,11 @@ class Solution(Reader):
         pass
 
     def draw_crime_map(self):
-        pass
+        self.file.fname = 'geo_simple'
+        self.print(self.json(self.file))
 
 if __name__ == '__main__':
     Solution().save_police_pos()
+    Solution().save_cctv_pos()
+    Solution().draw_crime_map()
 

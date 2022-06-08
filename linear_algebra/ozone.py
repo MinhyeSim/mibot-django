@@ -5,10 +5,8 @@ import matplotlib.pyplot as plt
 
 class Solution(object):
     def __init__(self):
-
-        url = "https://github.com/cs109/2014_data/blob/master/countries.csv"
+        url = "https://raw.githubusercontent.com/reisanar/datasets/master/ozone.data.csv"
         self.df = pd.read_csv(url)
-
         # 2. Data Preprocessing(데이터 전처리)
         # 필요한 column(Temp, Ozone)만 추출
         training_data = self.df[['temp', 'ozone']]
@@ -36,6 +34,40 @@ class Solution(object):
     # 6. 학습종료 후 예측값 계산 함수
     def predict(self, x):
         return np.dot(x, self.W) + self.b
+
+
+    # 4. 미분함수
+    def numerical_derivative(self, f, x):
+        # f : 미분하려고 하는 다변수 함수
+        # x : 모든 변수를 포함하고 있는 ndarray
+        delta_x = 1e-4
+        # 미분한 결과를 저장할 ndarray
+        derivative_x = np.zeros_like(x)
+
+        # iterator를 이용해서 입력된변수 x들 각각에 대해 편미분 수행
+        it = np.nditer(x, flags=['multi_index'])
+
+        while not it.finished:
+            idx = it.multi_index  # iterator의 현재 index를 tuple 형태로 추출
+
+            # 현재 칸의 값을 잠시 저장
+            tmp = x[idx]
+
+            x[idx] = tmp + delta_x
+            fx_plus_delta = f(x)  # f(x + delta_x)
+
+            x[idx] = tmp - delta_x
+            fx_minus_delta = f(x)  # f(x - delta_x)
+
+            # 중앙치분방식
+            derivative_x[idx] = (fx_plus_delta - fx_minus_delta) / (2 * delta_x)
+
+            # 데이터 원상 복구
+            x[idx] = tmp
+
+            it.iternext()
+
+        return derivative_x
 
 
     def solution(self):
