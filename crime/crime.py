@@ -18,3 +18,9 @@ class Solution(Reader):
     def save_police_norm(self):
         pass
 
+    def folium_test(self):
+        pass
+
+    def draw_crime_map(self):
+        pass
+
