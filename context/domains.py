@@ -3,8 +3,7 @@ from dataclasses import dataclass
 from abc import *
 import pandas as pd
 import pandas
-pd.read_csv()
-
+import googlemaps
 
 
 @dataclass()
@@ -104,5 +103,7 @@ class Reader(ReaderBase):
     def json(self, fname)-> object:
         return pd.read_json(f'{self.new_file(fname)}'.csv, encoding='UTF-8', thousands=',')
 
+    def gmaps(self) -> object:
+        return googlemaps.Client(key='')
 
 
