@@ -84,18 +84,19 @@ class ReaderBase(metaclass=ABCMeta):
 #Printer 클래스 생성 후 각 base를 상속 받는 구조
 
 class Printer(PrinterBase):
-    pass
+    def dframe(self, this):
+        pass
 
 class Reader(ReaderBase):
-    def new_file(self):
-        pass
+    def new_file(self, file) -> str:
+        return file.context + file.fname
 
 
-    def csv(self):
-        pass
+    def csv(self) -> str:
+        return
 
-    def xls(self):
-        pass
+    def xls(self) -> str:
+        return
 
-    def json(self):
-        pass
+    def json(self)-> str:
+        return
