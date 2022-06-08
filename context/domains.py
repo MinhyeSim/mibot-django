@@ -1,8 +1,10 @@
 # dname, fname, train, test, id, label
 from dataclasses import dataclass
-
-import pandas
 from abc import *
+import pandas as pd
+import pandas
+pd.read_csv()
+
 
 
 @dataclass()
@@ -91,12 +93,16 @@ class Reader(ReaderBase):
     def new_file(self, file) -> str:
         return file.context + file.fname
 
+    def csv(self, fname) -> object:
+        return pd.read_csv(f'{self.new_file(fname)}'.csv, encoding='UTF-8', thousands=',')
 
-    def csv(self) -> str:
-        return
+    def xls(self, fname, header, cols) -> object:
+        #header
+        #usecols
+        return pd.read_excel(f'{self.new_file(fname)}.xls', header= header, usecols=cols)
 
-    def xls(self) -> str:
-        return
+    def json(self, fname)-> object:
+        return pd.read_json(f'{self.new_file(fname)}'.csv, encoding='UTF-8', thousands=',')
 
-    def json(self)-> str:
-        return
+
+
