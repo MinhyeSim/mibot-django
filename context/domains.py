@@ -90,26 +90,47 @@ class PrinterBase(metaclass=ABCMeta):
 class ReaderBase(metaclass=ABCMeta):
 
     @abstractmethod
-    def new_file(self):
+    def new_file(self,file):
         pass
 
     @abstractmethod
-    def csv(self):
+    def csv(self,file):
         pass
 
     @abstractmethod
-    def xls(self):
+    def xls(self,file):
         pass
 
     @abstractmethod
-    def json(self):
+    def json(self,file):
         pass
 
 #Reader 클래스 생성
 #Printer 클래스 생성 후 각 base를 상속 받는 구조
 
 class Printer(PrinterBase):
-    def dframe(self, this):
+    pass
+
+
+class Reader(ReaderBase):
+    def new_file(self, file) -> str:
+        return file.context + file.fname
+
+    def csv(self, file) -> object:
+        return pd.read_csv(f'{self.new_file(file)}.csv', encoding='UTF-8', thousands=',')
+
+    def xls(self, file, header, cols) -> object:
+        #header
+        #usecols
+        return pd.read_excel(f'{self.new_file(file)}.xls', header=header, usecols=cols)
+
+    def json(self, file)-> object:
+        return pd.read_json(f'{self.new_file(file)}.csv', encoding='UTF-8', thousands=',')
+
+    def gmaps(self) -> object:
+        return googlemaps.Client(key='')
+
+    def print(self, this):
         print('*' * 100)
         print(f'1. Target type \n {type(this)} ')
         print(f'2. Target column \n {this.columns} ')
@@ -117,23 +138,5 @@ class Printer(PrinterBase):
         print(f'4. Target bottom 1개 행\n {this.tail(1)} ')
         print(f'4. Target null 의 갯수\n {this.isnull().sum()}개')
         print('*' * 100)
-        
-class Reader(ReaderBase):
-    def new_file(self, file) -> str:
-        return file.context + file.fname
-
-    def csv(self, file) -> object:
-        return pd.read_csv(f'{self.new_file(file)}'.csv, encoding='UTF-8', thousands=',')
-
-    def xls(self, file, header, cols) -> object:
-        #header
-        #usecols
-        return pd.read_excel(f'{self.new_file(file)}.xls', header= header, usecols=cols)
-
-    def json(self, file)-> object:
-        return pd.read_json(f'{self.new_file(file)}'.csv, encoding='UTF-8', thousands=',')
-
-    def gmaps(self) -> object:
-        return googlemaps.Client(key='')
 
 
