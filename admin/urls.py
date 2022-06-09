@@ -15,5 +15,4 @@ Including another URLconf
 """
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
 ]

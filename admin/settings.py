@@ -27,10 +27,22 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', # mysqlclient librarly 설치
+        'NAME': 'mibotdb',
+        'USER': 'root',
+        'PASSWORD': 'root', # mariaDB 설치 시 입력한 root 비밀번호 입력
+        'HOST': 'localhost',
+        'PORT': '3307'
+    }
+}
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
