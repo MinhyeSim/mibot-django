@@ -127,8 +127,10 @@ class Reader(ReaderBase):
     def json(self, file) -> object:
         return pd.read_json(f'{self.new_file(file)}.json', encoding='UTF-8')
 
-    def gmaps(self) -> object:
-        return googlemaps.Client(key='')
+    @staticmethod
+    def gmaps() -> googlemaps.Client:
+         return googlemaps.Client(key='')
+        #print(type(a))
 
     def print(self, this):
         print('*' * 100)
