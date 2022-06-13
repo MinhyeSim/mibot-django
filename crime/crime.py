@@ -8,6 +8,27 @@ class Solution(Reader):
         self.crime_rate_columns = ['살인검거율', '강도검거율', '강간검거율', '절도검거율', '폭력검거율']
         self.crime_columns = ['살인', '강도', '강간', '절도', '폭력']
 
+    def hook(self):
+        def print_menu():
+            print('0. Exit')
+            print('1. crime_in_seoul.csv, 구글맵 API 를 이용해서 서울시내 경찰서 주소목록파일을 작성하시오.')
+            print('2. us-states.json, us_unemployment.csv 를 이용해서 미국 실업률 지도를 작성하시오.')
+            print('3. 삭제')
+            return input('메뉴 선택 \n')
+
+        while 1:
+            menu = print_menu()
+            if menu == '0':
+                break
+            if menu == '1':
+                self.save_cctv_pos()
+            if menu == '2':
+                self.folium_test()
+            if menu == '3':
+                pass
+            elif menu == '0':
+                break
+
     def save_police_pos(self):
         file = self.file
         file.fname = 'crime_in_seoul'
@@ -90,7 +111,7 @@ class Solution(Reader):
         cols = "B,D,G,J,N"
         header = [1]
         pop = self.xls(file,header,cols)
-        # print(pop)
+        print(pop)
         '''
              자치구        합계      한국인   등록외국인  65세이상고령자
         0    자치구         계        계       계  65세이상고령자
@@ -136,6 +157,5 @@ class Solution(Reader):
         print(a)
 
 if __name__ == '__main__':
-    a = Solution()
-    a.folium_test()
+    Solution().hook()
 
