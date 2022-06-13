@@ -21,7 +21,7 @@ class Solution(Reader):
             if menu == '0':
                 break
             if menu == '1':
-                self.save_cctv_pos()
+                self.save_police_pos()
             if menu == '2':
                 self.folium_test()
             if menu == '3':
@@ -91,14 +91,22 @@ class Solution(Reader):
                 'plus_code': {'compound_code': 'HX7Q+CV 대한민국 서울특별시', 'global_code': '8Q98HX7Q+CV'},
                 'types': ['establishment', 'point_of_interest', 'police']}]
 
-            # station_addrs.append(temp[0].get('formatted_address'))
-            # t_loc = temp[0].get('geometry')
-            # station_lats.append(t_loc['location']['lat'])
-            # station_lats.append(t_loc['location']['lng'])
-            print(f'name {i} = {temp[0].get("formatted_address")}')
+            #print(f'name {i} = {temp[0].get("formatted_address")}')
+            '''
+            0번 중부서인 경우는 "대한민국 서울특별시 중구 수표로 27"이 담긴다.
+            1번 종로서인 경우는 "대한민국 서울특별시 종로구 율곡로 46"이 담긴다.
+            '''
+            station_addrs.append(temp[0].get('formatted_address'))
+            t_loc = temp[0].get('geometry')
+            station_lats.append(t_loc['location']['lat'])
+            station_lats.append(t_loc['location']['lng'])
 
-
-
+            gu_names = []
+            for name in station_addrs:
+                temp = name.split()
+                gu_name = [gu for gu in temp if gu[-1] == '구'][0]
+                gu_names.append(gu_name)
+            print(gu_name)
 
 
 
