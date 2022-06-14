@@ -16,22 +16,24 @@ class Solution(Reader):
             print('1. crime_in_seoul.csv, 구글맵 API 를 이용해서 서울시내 경찰서 주소목록파일(police_pos.csv)을 작성하시오.')
             print('2. us-states.json, us_unemployment.csv 를 이용해서 미국 실업률 지도(folium_test.html)를 작성하시오.')
             print('3. cctv_in_seoul.csv, pop_in_seoul.csv 를 이용해서 서울시내 경찰서 주소목록파일(cctv_pop.csv)을 작성하시오.')
+            print('4. police_pos.csv, 를 이용해서 경찰서 범죄검거율 정규화파일(police_norm.csv)을 작성하시오.')
+            print('5. 주어진 데이터를 활용해서 서울시내 경찰서 범죄발생과 검거율 현황지도(폴리움)를 작성하시오.')
             return input('메뉴 선택 \n')
 
         while 1:
             menu = print_menu()
             if menu == '0':
                 break
-            if menu == '1':
+            elif menu == '1':
                 self.save_police_pos()
-            if menu == '2':
+            elif menu == '2':
                 self.folium_test()
-            if menu == '3':
+            elif menu == '3':
                 self.save_cctv_pos()
-            if menu == '4':
+            elif menu == '4':
                 self.save_police_norm()
-            elif menu == '0':
-                break
+            elif menu == '5':
+                self.draw_crime_map()
 
     def save_police_pos(self):
         file = self.file
@@ -47,28 +49,27 @@ class Solution(Reader):
         [{0: '서울중부경찰서'}, {1: '서울종로경찰서'}, {2: '서울남대문경찰서'}, ... , {21: '서울종암경찰서'}
         '''
         gmaps = self.gmaps()
-
         '''
-        a = gmaps.geocode('서울중부경찰서', language='ko')
-        print(a)
-        [{'address_components': 
-            [{'long_name': '２７', 'short_name': '２７', 'types': ['premise']}, 
-            {'long_name': '수표로', 'short_name': '수표로', 'types': ['political', 'sublocality', 'sublocality_level_4']}, 
-            {'long_name': '중구', 'short_name': '중구', 'types': ['political', 'sublocality', 'sublocality_level_1']}, 
-            {'long_name': '서울특별시', 'short_name': '서울특별시', 'types': ['administrative_area_level_1', 'political']}, 
-            {'long_name': '대한민국', 'short_name': 'KR', 'types': ['country', 'political']}, 
-            {'long_name': '100-032', 'short_name': '100-032', 'types': ['postal_code']}], 
-            'formatted_address': '대한민국 서울특별시 중구 수표로 27', 
-            'geometry': {'location': 
-                {'lat': 37.56361709999999, 'lng': 126.9896517}, 
-                'location_type': 'ROOFTOP', 
-                'viewport': {'northeast': {'lat': 37.5649660802915, 'lng': 126.9910006802915}, 
-                'southwest': {'lat': 37.5622681197085, 'lng': 126.9883027197085}}}, 
-                'partial_match': True, 'place_id': 'ChIJc-9q5uSifDURLhQmr5wkXmc', 
-                'plus_code': {'compound_code': 'HX7Q+CV 대한민국 서울특별시', 'global_code': '8Q98HX7Q+CV'}, 
-                'types': ['establishment', 'point_of_interest', 'police']}]
-        서울종암경찰서는 2021.12.20부터 이전함
-        '''
+            a = gmaps.geocode('서울중부경찰서', language='ko')
+            print(a)
+            [{'address_components': 
+                [{'long_name': '２７', 'short_name': '２７', 'types': ['premise']}, 
+                {'long_name': '수표로', 'short_name': '수표로', 'types': ['political', 'sublocality', 'sublocality_level_4']}, 
+                {'long_name': '중구', 'short_name': '중구', 'types': ['political', 'sublocality', 'sublocality_level_1']}, 
+                {'long_name': '서울특별시', 'short_name': '서울특별시', 'types': ['administrative_area_level_1', 'political']}, 
+                {'long_name': '대한민국', 'short_name': 'KR', 'types': ['country', 'political']}, 
+                {'long_name': '100-032', 'short_name': '100-032', 'types': ['postal_code']}], 
+                'formatted_address': '대한민국 서울특별시 중구 수표로 27', 
+                'geometry': {'location': 
+                    {'lat': 37.56361709999999, 'lng': 126.9896517}, 
+                    'location_type': 'ROOFTOP', 
+                    'viewport': {'northeast': {'lat': 37.5649660802915, 'lng': 126.9910006802915}, 
+                    'southwest': {'lat': 37.5622681197085, 'lng': 126.9883027197085}}}, 
+                    'partial_match': True, 'place_id': 'ChIJc-9q5uSifDURLhQmr5wkXmc', 
+                    'plus_code': {'compound_code': 'HX7Q+CV 대한민국 서울특별시', 'global_code': '8Q98HX7Q+CV'}, 
+                    'types': ['establishment', 'point_of_interest', 'police']}]
+            서울종암경찰서는 2021.12.20부터 이전함
+            '''
 
         station_addrs = []
         station_lats = []
@@ -78,23 +79,7 @@ class Solution(Reader):
             if name != '서울종암경찰서':
                 temp = gmaps.geocode(name, language='ko')
             else:
-                temp = [{'address_components':
-                             [{'long_name': '32', 'short_name': '32', 'types': ['premise']},
-                              {'long_name': '화랑로7길', 'short_name': '화랑로7길', 'types': ['political', 'sublocality', 'sublocality_level_4']},
-                              {'long_name': '성북구', 'short_name': '성북구', 'types': ['political', 'sublocality', 'sublocality_level_1']},
-                              {'long_name': '서울특별시', 'short_name': '서울특별시', 'types': ['administrative_area_level_1', 'political']},
-                              {'long_name': '대한민국', 'short_name': 'KR', 'types': ['country', 'political']},
-                              {'long_name': '100-032', 'short_name': '100-032', 'types': ['postal_code']}],
-                         'formatted_address': '대한민국 서울특별시 성북구 화랑로7길 32',
-                         'geometry': {'location':
-                                          {'lat': 37.60388169879458, 'lng': 127.04001571848704},
-                                      'location_type': 'ROOFTOP',
-                                      'viewport': {'northeast': {'lat': 37.60388169879458, 'lng': 127.04001571848704},
-                                                   'southwest': {'lat': 37.60388169879458, 'lng': 127.04001571848704}}},
-                         'partial_match': True, 'place_id': 'ChIJc-9q5uSifDURLhQmr5wkXmc',
-                         'plus_code': {'compound_code': 'HX7Q+CV 대한민국 서울특별시', 'global_code': '8Q98HX7Q+CV'},
-                         'types': ['establishment', 'point_of_interest', 'police']}]
-
+                temp = self.jongam_police_info()
             #print(f'name {i} = {temp[0].get("formatted_address")}')
             '''
             0번 중부서인 경우는 "대한민국 서울특별시 중구 수표로 27"이 담긴다.
@@ -125,23 +110,22 @@ class Solution(Reader):
         header = [1]  # 자치구  합계  한국인  등록외국인 65세이상고령자 는 헤더로 취급
         skiprows = [2]  # 0 자치구   계  계 계  65세이상고령자 행 제거
         pop = self.xls(file, header, cols, skiprows=skiprows)  # 헤더는 2행, 사용하는 컬럼은 B, D, G, J, N 을 사용한다.
-
         '''
-             자치구        합계      한국인   등록외국인  65세이상고령자
-        0    자치구         계        계       계  65세이상고령자
-        1     합계  10197604  9926968  270636   1321458
-        2    종로구    162820   153589    9231     25425
-        3     중구    133240   124312    8928     20764
-        4    용산구    244203   229456   14747     36231
+                    자치구        합계      한국인   등록외국인  65세이상고령자
+               0    자치구         계        계       계  65세이상고령자
+               1     합계  10197604  9926968  270636   1321458
+               2    종로구    162820   153589    9231     25425
+               3     중구    133240   124312    8928     20764
+               4    용산구    244203   229456   14747     36231
 
-        를 아래와 같이 변경함.skiprows 사용
+               를 아래와 같이 변경함.skiprows 사용
 
-             자치구          합계        한국인     등록외국인   65세이상고령자
-        0     합계  10197604.0  9926968.0  270636.0  1321458.0
-        1    종로구    162820.0   153589.0    9231.0    25425.0
-        2     중구    133240.0   124312.0    8928.0    20764.0
-        3    용산구    244203.0   229456.0   14747.0    36231.0
-        '''
+                    자치구          합계        한국인     등록외국인   65세이상고령자
+               0     합계  10197604.0  9926968.0  270636.0  1321458.0
+               1    종로구    162820.0   153589.0    9231.0    25425.0
+               2     중구    133240.0   124312.0    8928.0    20764.0
+               3    용산구    244203.0   229456.0   14747.0    36231.0
+               '''
         # print(cctv)
         '''
              기관명    소계  2013년도 이전  2014년  2015년  2016년
@@ -150,7 +134,6 @@ class Solution(Reader):
         2    강북구   748        369    120    138    204
         3    강서구   884        388    258    184     81
         '''
-
         cctv_pop = pd.DataFrame()
         cctv_pop.to_csv('./save/cctv_pop.csv')
         cctv.rename(columns={cctv.columns[0]: '구별'}, inplace=True)
@@ -170,22 +153,22 @@ class Solution(Reader):
         print(f'고령자비율과 CCTV의 상관계수 {str(cor1)} \n'
               f'외국인비율과 CCTV의 상관계수 {str(cor2)} ')
         """
-         고령자비율과 CCTV 의 상관계수 [[ 1.         -0.28078554]
-                                     [-0.28078554  1.        ]] 
-         외국인비율과 CCTV 의 상관계수 [[ 1.         -0.13607433]
-                                     [-0.13607433  1.        ]]
-        r이 -1.0과 -0.7 사이이면, 강한 음적 선형관계,
-        r이 -0.7과 -0.3 사이이면, 뚜렷한 음적 선형관계,
-        r이 -0.3과 -0.1 사이이면, 약한 음적 선형관계,
-        r이 -0.1과 +0.1 사이이면, 거의 무시될 수 있는 선형관계,
-        r이 +0.1과 +0.3 사이이면, 약한 양적 선형관계,
-        r이 +0.3과 +0.7 사이이면, 뚜렷한 양적 선형관계,
-        r이 +0.7과 +1.0 사이이면, 강한 양적 선형관계
-        고령자비율 과 CCTV 상관계수 [[ 1.         -0.28078554] 약한 음적 선형관계
-                                    [-0.28078554  1.        ]]
-        외국인비율 과 CCTV 상관계수 [[ 1.         -0.13607433] 거의 무시될 수 있는
-                                    [-0.13607433  1.        ]]                        
-         """
+               고령자비율과 CCTV 의 상관계수 [[ 1.         -0.28078554]
+                                           [-0.28078554  1.        ]] 
+               외국인비율과 CCTV 의 상관계수 [[ 1.         -0.13607433]
+                                           [-0.13607433  1.        ]]
+              r이 -1.0과 -0.7 사이이면, 강한 음적 선형관계,
+              r이 -0.7과 -0.3 사이이면, 뚜렷한 음적 선형관계,
+              r이 -0.3과 -0.1 사이이면, 약한 음적 선형관계,
+              r이 -0.1과 +0.1 사이이면, 거의 무시될 수 있는 선형관계,
+              r이 +0.1과 +0.3 사이이면, 약한 양적 선형관계,
+              r이 +0.3과 +0.7 사이이면, 뚜렷한 양적 선형관계,
+              r이 +0.7과 +1.0 사이이면, 강한 양적 선형관계
+              고령자비율 과 CCTV 상관계수 [[ 1.         -0.28078554] 약한 음적 선형관계
+                                          [-0.28078554  1.        ]]
+              외국인비율 과 CCTV 상관계수 [[ 1.         -0.13607433] 거의 무시될 수 있는
+                                          [-0.13607433  1.        ]]                        
+               """
         print(f'고령자비율과 CCTV의 상관계수 {str(cor1)} \n'
               f'외국인비율과 CCTV의 상관계수 {str(cor2)} ')
         cctv_pop.to_csv('./save/cctv_pop.csv')
@@ -219,10 +202,12 @@ class Solution(Reader):
         police['폭력검거율'] = police['폭력 검거'] / police['폭력 발생'] * 100
         police.drop(columns={'살인 검거', '강도 검거', '강간 검거', '절도 검거', '폭력 검거'}, axis=1, inplace=True)
         print('%' * 100)
-        police.to_csv('./save/police.csv', sep=',', encoding='UTF-8')
         for i in self.crime_rate_columns:
-            police.loc[police[i] > 100, 1] = 100  # 데이터값의 기간 오류로 100을 넘으면 100으로 계산
+            # loc() 는 데이터프레임의 행이나 컬럼에 index로 접근한다.
+            # 그래서 police[i] 로 접근하도록 한다.
+            police[i].loc[police[i] > 100] = 100  # 데이터값의 기간 오류로 100을 넘으면 100으로 계산
 
+        police.to_csv('./save/police.csv', sep=',', encoding='UTF-8')
         police.rename(columns={
             '살인 발생': '살인',
             '강도 발생': '강도',
@@ -288,9 +273,91 @@ class Solution(Reader):
 
     def draw_crime_map(self):
         file = self.file
-        file.fname = 'geo_simple'
-        a = self.csv(file)
-        print(a)
+        file.context = './data/'
+        file.fname = 'seoul_map'  # 서울시지도 geo_simple.json
+        seoul_map = self.map_json(file)
+        # 범죄현황 데이터 crime_in_seoul.csv
+        file.fname = 'crime_in_seoul'
+        crime = self.csv(file)
+
+
+        # 검거율 정규화 데이터 police_norm.csv
+        file.context='./save/'
+        file.fname = 'police_norm'
+        police_norm = self.csv(file)
+
+
+        # 경찰서위치 police_pos.csv
+        file.fname = 'police_pos'
+        police_pos = self.csv(file)
+
+        station_names = []
+        for name in crime['관서명']:
+            station_names.append(f'서울{str(name[:-1])}경찰서')
+
+
+        gmaps = self.gmaps()
+
+        station_addrs = []
+        station_lats = []
+        station_lngs = []
+
+        for i, name in enumerate(station_names):
+            if name != '서울종암경찰서':
+                temp = gmaps.geocode(name, language='ko')
+            else:
+                temp = self.jongam_police_info()
+            station_addrs.append(temp[0].get('formatted_address'))
+            t_loc = temp[0].get('geometry')
+            station_lats.append(t_loc['location']['lat'])
+            station_lats.append(t_loc['location']['lng'])
+        police_pos['lat'] = station_lats
+        police_pos['lng'] = station_lngs
+        col = ['살인 검거', '강도 검거', '강간 검거', '절도 검거', '폭력 검거']
+        tmp = police_pos[col] / police_pos[col].max()
+        police_pos['검거'] = np.sum(tmp, axis=1)
+        folium_map = folium.Map(location=[37.5502, 126.982], zoom_start=12, title='Stamen Toner')
+        folium_map = folium.Map(location=[37.5502, 126.982], zoom_start=12, title='Stamen Toner')
+
+        folium.Choropleth(
+            geo_data=seoul_map,
+            data=tuple(zip(police_norm['구별'], police_norm['범죄'])),
+            columns=["State", "Crime Rate"],
+            key_on="feature.id",
+            fill_color="PuRd",
+            fill_opacity=0.7,
+            line_opacity=0.2,
+            legend_name="Crime Rate (%)",
+            reset=True,
+        ).add_to(folium_map)
+        for i in police_pos.index:
+            folium.CircleMarker([police_pos['lat'][i], police_pos['lng'][i]],
+                                radius=police_pos['검거'][i] * 10,
+                                fill_color='#0a0a32').add_to(folium_map)
+
+        folium_map.save('./saved_data/crime_map.html')
+
+
+
+
+    def jongam_police_info(self):
+        return [{'address_components':
+                             [{'long_name': '32', 'short_name': '32', 'types': ['premise']},
+                              {'long_name': '화랑로7길', 'short_name': '화랑로7길', 'types': ['political', 'sublocality', 'sublocality_level_4']},
+                              {'long_name': '성북구', 'short_name': '성북구', 'types': ['political', 'sublocality', 'sublocality_level_1']},
+                              {'long_name': '서울특별시', 'short_name': '서울특별시', 'types': ['administrative_area_level_1', 'political']},
+                              {'long_name': '대한민국', 'short_name': 'KR', 'types': ['country', 'political']},
+                              {'long_name': '100-032', 'short_name': '100-032', 'types': ['postal_code']}],
+                         'formatted_address': '대한민국 서울특별시 성북구 화랑로7길 32',
+                         'geometry': {'location':
+                                          {'lat': 37.60388169879458, 'lng': 127.04001571848704},
+                                      'location_type': 'ROOFTOP',
+                                      'viewport': {'northeast': {'lat': 37.60388169879458, 'lng': 127.04001571848704},
+                                                   'southwest': {'lat': 37.60388169879458, 'lng': 127.04001571848704}}},
+                         'partial_match': True, 'place_id': 'ChIJc-9q5uSifDURLhQmr5wkXmc',
+                         'plus_code': {'compound_code': 'HX7Q+CV 대한민국 서울특별시', 'global_code': '8Q98HX7Q+CV'},
+                         'types': ['establishment', 'point_of_interest', 'police']}]
+
 
 if __name__ == '__main__':
     Solution().hook()
