@@ -67,11 +67,21 @@ class Solution(Reader):
         self.okt.pos("삼성전자 글로벌센터 전자사업부", stem=True)
         with open(report, 'r', encoding='utf-8') as f:
             texts = f.read()
-            print(texts)
-            return texts
+        texts = texts.replace('\n', ' ')
+        tokenizer = re.compile(r'[^ㄱ-힇]+')
+        return tokenizer.sub(' ',texts)
 
     def tokenization(self):
-        pass
+        noun_tokens = []
+        tokens = word_tokenize(self.preprocessing())
+        ic(tokens[:100])
+        for i in tokens:
+            pos = self.okt.pos(i)
+            _ = [j[0] for j in pos if j[1] == 'Noun']
+            if len(''.join(_)) > 1:
+                noun_tokens.append(' '.join(_))
+        texts = ' '.join(noun_tokens)
+        ic(texts[:100])
 
 
     def token_embedding(self):
