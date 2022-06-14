@@ -34,6 +34,8 @@ class Solution(Reader):
             print('3. Token Embedding')
             print('4. Document Embedding')
             print('5. 2018년 삼성사업계획서를 분석해서 워드클라우드를 작성하시오.')
+            print('6. ')
+            print('7. remove')
             print('9. nltk 다운로드')
 
             return input('메뉴 선택 \n')
@@ -54,6 +56,8 @@ class Solution(Reader):
                 self.draw_word_cloud()
             elif menu == '6':
                 self.read_stopword()
+            elif menu == '7':
+                self.remove_stopword()
             elif menu == '9':
                 Solution.download()
 
@@ -69,31 +73,41 @@ class Solution(Reader):
         self.okt.pos("삼성전자 글로벌센터 전자사업부", stem=True)
         with open(report, 'r', encoding='utf-8') as f:
             texts = f.read()
+
         texts = texts.replace('\n', ' ')
         tokenizer = re.compile(r'[^ㄱ-힇]+')
         return tokenizer.sub(' ',texts)
 
     def tokenization(self):
+        # texts = self.preprocessing() # 토큰화
+        # tokenizer = re.compile(r'[ㄱ-힣]+') #ㄱ부터 힣까지  한글만 남겨라
         noun_tokens = []
         tokens = word_tokenize(self.preprocessing())
-        ic(tokens[:100])
+        # ic(tokens[:100])
         for i in tokens:
             pos = self.okt.pos(i)
             _ = [j[0] for j in pos if j[1] == 'Noun']
             if len(''.join(_)) > 1:
-                noun_tokens.append(' '.join(_))
+                noun_tokens.append(''.join(_))
         texts = ' '.join(noun_tokens)
-        ic(texts[:100])
+        # ic(texts[:100])
+        return texts
 
     def read_stopword(self):
         self.okt.pos("삼성전자 글로벌센터 전자사업부", stem=True)
         file = self.file
         file.fname = 'stopwords.txt'
-        a = self.new_file(file)
-        with open(a, 'r', encoding='utf-8') as f:
+        stopwords = self.new_file(file)
+        with open(stopwords, 'r', encoding='UTF-8') as f:
             texts = f.read()
-        print(texts)
+        #ic(texts)
+        return texts
 
+    def remove_stopword(self):
+        tokens = self.tokenization()
+        stopwords = self.read_stopword()
+        texts = [word for word in tokens.split() if not word in stopwords.split()]
+        ic(texts)
 
     def token_embedding(self):
         pass

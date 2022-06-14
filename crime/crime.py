@@ -97,7 +97,7 @@ class Solution(Reader):
             gu_names.append(gu_name)
         crime['구별'] = gu_names
         #print(crime)
-        crime.to_csv('./save/police_pos.csv')
+        crime.to_csv('./save/police_pos.csv', index=False)
 
 
 
@@ -274,18 +274,16 @@ class Solution(Reader):
     def draw_crime_map(self):
         file = self.file
         file.context = './data/'
-        file.fname = 'seoul_map'  # 서울시지도 geo_simple.json
+        file.fname = 'geo_simple'  # 서울시지도 geo_simple.json
         seoul_map = self.map_json(file)
         # 범죄현황 데이터 crime_in_seoul.csv
         file.fname = 'crime_in_seoul'
         crime = self.csv(file)
 
-
         # 검거율 정규화 데이터 police_norm.csv
         file.context='./save/'
         file.fname = 'police_norm'
         police_norm = self.csv(file)
-
 
         # 경찰서위치 police_pos.csv
         file.fname = 'police_pos'
@@ -294,7 +292,6 @@ class Solution(Reader):
         station_names = []
         for name in crime['관서명']:
             station_names.append(f'서울{str(name[:-1])}경찰서')
-
 
         gmaps = self.gmaps()
 
@@ -310,13 +307,12 @@ class Solution(Reader):
             station_addrs.append(temp[0].get('formatted_address'))
             t_loc = temp[0].get('geometry')
             station_lats.append(t_loc['location']['lat'])
-            station_lats.append(t_loc['location']['lng'])
+            station_lngs.append(t_loc['location']['lng'])
         police_pos['lat'] = station_lats
         police_pos['lng'] = station_lngs
         col = ['살인 검거', '강도 검거', '강간 검거', '절도 검거', '폭력 검거']
         tmp = police_pos[col] / police_pos[col].max()
         police_pos['검거'] = np.sum(tmp, axis=1)
-        folium_map = folium.Map(location=[37.5502, 126.982], zoom_start=12, title='Stamen Toner')
         folium_map = folium.Map(location=[37.5502, 126.982], zoom_start=12, title='Stamen Toner')
 
         folium.Choropleth(
@@ -335,7 +331,7 @@ class Solution(Reader):
                                 radius=police_pos['검거'][i] * 10,
                                 fill_color='#0a0a32').add_to(folium_map)
 
-        folium_map.save('./saved_data/crime_map.html')
+        folium_map.save('./save/crime_map.html')
 
 
 
