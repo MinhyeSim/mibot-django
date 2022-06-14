@@ -52,6 +52,8 @@ class Solution(Reader):
                 self.document_embedding()
             elif menu == '5':
                 self.draw_word_cloud()
+            elif menu == '6':
+                self.read_stopword()
             elif menu == '9':
                 Solution.download()
 
@@ -82,6 +84,15 @@ class Solution(Reader):
                 noun_tokens.append(' '.join(_))
         texts = ' '.join(noun_tokens)
         ic(texts[:100])
+
+    def read_stopword(self):
+        self.okt.pos("삼성전자 글로벌센터 전자사업부", stem=True)
+        file = self.file
+        file.fname = 'stopwords.txt'
+        a = self.new_file(file)
+        with open(a, 'r', encoding='utf-8') as f:
+            texts = f.read()
+        print(texts)
 
 
     def token_embedding(self):
