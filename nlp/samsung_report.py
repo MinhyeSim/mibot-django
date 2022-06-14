@@ -8,7 +8,17 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from icecream import ic
 from context.domains import File, Reader
+import tweepy
 
+
+
+'''
+https://blog.diyaml.com/teampost/%EC%9E%90%EC%97%B0%EC%96%B4-%EC%B2%98%EB%A6%AC%EC%9D%98-4%EA%B0%80%EC%A7%80-%EB%8B%A8%EA%B3%84/
+1.Preprocessing
+2.Tokenization
+3.Token Embedding
+4.Document Embedding
+'''
 
 class Solution(Reader):
     def __init__(self):
@@ -19,20 +29,60 @@ class Solution(Reader):
     def hook(self):
         def print_menu():
             print('0. Exit')
-            print('1. crime_in_seoul.csv, 구글맵 API 를 이용해서 서울시내 경찰서 주소목록파일(police_pos.csv)을 작성하시오.')
-            print('2. us-states.json, us_unemployment.csv 를 이용해서 미국 실업률 지도(folium_test.html)를 작성하시오.')
-            print('3. cctv_in_seoul.csv, pop_in_seoul.csv 를 이용해서 서울시내 경찰서 주소목록파일(cctv_pop.csv)을 작성하시오.')
-            print('4. police_pos.csv, 를 이용해서 경찰서 범죄검거율 정규화파일(police_norm.csv)을 작성하시오.')
-            print('5. .')
+            print('1. kr-Report_2018.txt를 읽는다')
+            print('2. Tokenization')
+            print('3. Token Embedding')
+            print('4. Document Embedding')
+            print('5. 2018년 삼성사업계획서를 분석해서 워드클라우드를 작성하시오.')
+            print('9. nltk 다운로드')
+
             return input('메뉴 선택 \n')
 
-    def read_file(self):
+        while 1:
+            menu = print_menu()
+            if menu == '0':
+                break
+            elif menu == '1':
+                self.preprocessing()
+            elif menu == '2':
+                self.tokenization()
+            elif menu == '3':
+                self.token_embedding()
+            elif menu == '4':
+                self.document_embedding()
+            elif menu == '5':
+                self.draw_word_cloud()
+            elif menu == '9':
+                Solution.download()
+
+    @staticmethod
+    def download():
+        nltk.download('punkt')
+
+
+    def preprocessing(self):
         file = self.file
         file.fname = 'kr-Report_2018.txt'
-        report = self.csv(file)
+        report = self.new_file(file)
         self.okt.pos("삼성전자 글로벌센터 전자사업부", stem=True)
         with open(report, 'r', encoding='utf-8') as f:
             texts = f.read()
+            print(texts)
             return texts
+
+    def tokenization(self):
+        pass
+
+
+    def token_embedding(self):
+        pass
+
+    def document_embedding(self):
+        pass
+
+    def draw_word_cloud(self):
+        pass
+
 if __name__ == '__main__':
-    Solution().read_file()
+    print(tweepy.__version__)
+    Solution().hook()
