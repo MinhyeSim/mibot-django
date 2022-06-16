@@ -10,7 +10,6 @@ import math
 from matplotlib import rc, font_manager
 rc('font', family=font_manager.FontProperties(fname='C:/Windows/Fonts/malgunsl.ttf').get_name())
 import matplotlib
-
 matplotlib.rcParams['axes.unicode_minus'] = False
 import numpy as np
 '''
@@ -32,9 +31,9 @@ class Solution(Reader):
             print(' **** 전처리 *** ')
             print('1. 크롤링(텍스트 마이닝)')
             print('2. 정형화(객체)')
-            print('3. 토큰화')
-            print('4. 임베딩')
-            print(' **** 후처리 *** ')
+            print('3. 다음 영화 댓글이 긍정인지 부정인지 ratio 값으로 판단하시오 \n'
+                  '너무 좋아요. 내 인생의 최고의 명작 영화\n'
+                  '이렇게 졸린 영화는 처음이야')
             return input('메뉴 선택 \n')
 
         while 1:
@@ -47,8 +46,6 @@ class Solution(Reader):
                 self.preprocess()
             elif menu == '3':
                 self.naiveBayesClassifier()
-            elif menu == '4':
-                pass
 
     def preprocess(self):
         self.stereotype()
@@ -181,9 +178,9 @@ class Solution(Reader):
             ax.axis('equal')
         plt.show()
 
-    def naiveBayesClassifier(self, doc):
+    def naiveBayesClassifier(self):
         path = ''
-        self.load_corpus(path)
+        self.load_corpus()
         training_set = None
         self.count_words(training_set)
         counts = 0
@@ -192,13 +189,18 @@ class Solution(Reader):
         k = self.k
         word_probs = 0
         trainfile_path = ''
-        self.word_probabilities (counts, total_class0, total_class1, k)
+        doc = None
+        self.word_probabilities(counts, total_class0, total_class1, k)
         self.class0_probabilities(word_probs, doc)
         self.train(trainfile_path)
         self.classify(doc)
 
     def load_corpus(self):
-        corpus = pd.read_table()
+        file = self.file
+        file.fname = 'movie_reviews.txt'
+        corpus = pd.read_table(self.new_file(file))
+        corpus.to_csv('./save/movie_reviews.csv', index=False)
+
         return corpus
 
     def count_words(self, training_set):
@@ -221,6 +223,14 @@ class Solution(Reader):
 
     def train(self, trainfile_path):
         pass
+
+    def classify(self, doc):
+        return self.class0_probabilities(self.word_probs, doc)
+
+
+
+
+
 
 if __name__ == '__main__':
     Solution().hook()
