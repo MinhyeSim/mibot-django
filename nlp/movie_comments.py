@@ -31,9 +31,7 @@ class Solution(Reader):
             print(' **** 전처리 *** ')
             print('1. 크롤링(텍스트 마이닝)')
             print('2. 정형화(객체)')
-            print('3. 다음 영화 댓글이 긍정인지 부정인지 ratio 값으로 판단하시오 \n'
-                  '너무 좋아요. 내 인생의 최고의 명작 영화\n'
-                  '이렇게 졸린 영화는 처음이야')
+            print('3. 다음 영화 댓글이 긍정인지 부정인지 ratio 값으로 판단하시오 \n')
             return input('메뉴 선택 \n')
 
         while 1:
