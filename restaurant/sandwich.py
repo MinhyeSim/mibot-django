@@ -13,10 +13,6 @@ from tqdm import tqdm
 '''
 구조를 파악하도록 객체지향으로 분리하는 훈련을 해주세요. 
 템플릿 메소드 패턴은 반드시 걸어야 합니다.
-1.Preprocessing
-2.Tokenization
-3.Token Embedding
-4.Document Embedding
 '''
 
 class Solution(Reader):
@@ -86,8 +82,8 @@ class Solution(Reader):
         for i in df['URL']:
             req = Request(i, headers={'User-Agent': 'Mozilla/5.0'})
             html = urlopen(req)
-            soup_tmp = BeautifulSoup(html, 'lxml')
-            gettings = soup_tmp.find('p', 'addy').get_text()
+            soup_tml = BeautifulSoup(html, 'lxml')
+            gettings = soup_tml.find('p', 'addy').get_text()
             price.append(gettings.split()[0][:-1])
             address.append(' '.join(gettings.split()[1:-2]))
         df['Price'] = price
