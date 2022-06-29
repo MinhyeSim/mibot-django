@@ -14,7 +14,6 @@ model.evaluate(x_test, y_test, verbose=2)
 plt.imshow(x_test[30], cmap="gray")
 plt.show()
 picks = [30]
-#predict = model.predict_classes(x_test[picks])
 y_prob = model.predict(x_test[picks], verbose=0)
 predicted = y_prob.argmax(axis=-1)
 
