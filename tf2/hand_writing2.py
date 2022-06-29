@@ -48,6 +48,7 @@ class Solution(tf.keras.Model):
 
         # 모델 정보 출력
         model.summary()
+        model.save('./save/mnist_model.h5')
 
 if __name__ == '__main__':
     s = Solution()

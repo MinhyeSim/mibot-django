@@ -1,5 +1,6 @@
+import math
 import urllib.request
-from collections import Counter
+from collections import Counter, defaultdict
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -21,10 +22,12 @@ from wordcloud import WordCloud
 
 
 class Solution(Reader):
-    def __init__(self):
+    def __init__(self, k=0.5):
         self.movie_comments = pd.DataFrame()
         self.file = File()
         self.file.context = './data/'
+        self.k = k
+        self.work_probs = []
 
     def hook(self):
         self.preprocess()
@@ -185,6 +188,41 @@ class Solution(Reader):
         plt.axis('off')
         plt.show()
 
+
+
+    def naiveBayesClassifier(self):
+
+       self.load_corpus()
+
+    def load_corpus(self):
+
+        file = self.file
+        file.context = './save/'
+        file.fname = 'movie_reviews.txt'
+        corpus = pd.read_table(self.new_file(file), names=['title', 'point', 'doc', 'label'])
+        corpus.drop(columns=['title','label'], inplace=True)
+        corpus.to_csv('./save/movie.csv', index=False)
+        corpus = corpus[['doc', 'point']] #타입이 데이터 프레임
+        corpus = np.array(corpus) #데이터프레임은 수정을 못하니까 array로 변경
+        return corpus
+
+    def count_word(self):
+        counts = defaultdict(lambda : [0, 0])
+        for doc, point in self.load_corpus():
+            if self.isNumber(doc) is False:
+                words = doc.split()
+                for word in words:
+                    counts[word][0 if point > 8 else 1] += 1
+
+    def isNumber(self, s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
+
+
 if __name__ == '__main__':
-    Solution().hook()
+    # Solution().hook()
+    Solution().naiveBayesClassifier()
     #hook을 안쓰기위한 방법. s가 오버라이딩이 되었음.
