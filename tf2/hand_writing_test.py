@@ -2,7 +2,6 @@
 # 객체지향으로 코딩하지 말기
 import matplotlib.pyplot as plt
 from keras.datasets import mnist
-from tensorflow import keras
 import tensorflow as tf
 
 _, (x_test, y_test) = mnist.load_data()
